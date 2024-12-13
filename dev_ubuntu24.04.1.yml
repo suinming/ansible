@@ -8,11 +8,6 @@
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
-    - name: Setup zsh as the default shell
-      shell: command -v zsh | sudo tee -a /etc/shells
-      tags:
-        - zsh
-
     - name: Clone Neovim repository
       git:
         repo: https://github.com/neovim/neovim.git
@@ -35,18 +30,15 @@
       tags:
         - neovim
 
-    - name: Pull dotfiles from GitHub repository
-      git:
-        repo: "{{ dotfiles_repo }}"
-        dest: ./dotfiles
-        accept_hostkey: yes
-        key_file: "/home/{{ user }}/{{ ssh_key }}"
-        force: yes
-      delegate_to: localhost
-      run_once: true
-      become: no
+    - name: Configure Neovim
+      copy:
+        src: "/home/{{ user }}/dotfiles/.config/nvim"
+        dest: "/home/{{ user }}/.config/nvim"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
       tags:
-        - dotfiles
+        - neovim
 
     - name: Ensure font directory exists
       file:
@@ -76,6 +68,11 @@
       tags:
         - nerd-font
 
+    - name: Setup zsh as the default shell
+      shell: command -v zsh | sudo tee -a /etc/shells
+      tags:
+        - zsh
+
     - name: Configure Zsh
       copy:
         src: "/home/{{ user }}/dotfiles/.zshrc"
@@ -85,16 +82,6 @@
         mode: "0644"
       tags:
         - zsh
-
-    - name: Configure Neovim
-      copy:
-        src: "/home/{{ user }}/dotfiles/.config/nvim"
-        dest: "/home/{{ user }}/.config/nvim"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: "0644"
-      tags:
-        - neovim
 
     - name: Install Starship
       shell: curl -sS https://starship.rs/install.sh | sh
@@ -157,6 +144,8 @@
         curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
       args:
         creates: /etc/apt/keyrings/wezterm-fury.gpg
+      tags:
+        - wezterm 
 
     - name: Add the Wezterm APT repository
       ansible.builtin.shell: |

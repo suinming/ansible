@@ -3,7 +3,9 @@
   become: yes
   vars:
     user: suinming
+    dotfiles_repo: git@github.com:suinming/dotfiles.git
     ssh_key: .ssh/id_ed25519
+    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
     - name: Create user
@@ -45,6 +47,19 @@
           - i3
           - i3blocks
         state: latest
+
+    - name: Pull dotfiles from GitHub repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: ./dotfiles
+        accept_hostkey: yes
+        key_file: "/home/{{ user }}/{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      become: no
+      tags:
+        - dotfiles
 
     - name: Display final instructions
       debug:
