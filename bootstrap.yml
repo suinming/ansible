@@ -42,13 +42,11 @@
           - curl
           - python3
           - python3-pip
-          - keepassxc
         state: latest
 
     - name: Display final instructions
       debug:
         msg: |
           The setup is complete! Here are the next steps:
-          1. Setup keepassxc database 
-          2. Add the ssh public key to github repo. 
-          3. Run the dev_* script to finish the setup. 
+          1. Add the ssh public key to github repo. 
+          2. Run the dev_* script to finish the setup. 
