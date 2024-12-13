@@ -1,0 +1,54 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    user: suinming
+    ssh_key: .ssh/id_ed25519
+
+  tasks:
+    - name: Create user
+      user:
+        name: "{{ user }}"
+        groups: root
+
+    - name: Generate SSH key
+      user:
+        name: "{{ user }}"
+        generate_ssh_key: yes
+        ssh_key_type: ed25519
+        ssh_key_file: "{{ ssh_key }}"
+        force: no
+
+    - name: Install updates (Ubuntu)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install system packages
+      apt:
+        name:
+          - git
+          - bat
+          - exa
+          - zsh
+          - tmux
+          - ripgrep
+          - fzf
+          - ninja-build
+          - gettext
+          - cmake
+          - unzip
+          - curl
+          - python3
+          - python3-pip
+          - keepassxc
+        state: latest
+
+    - name: Display final instructions
+      debug:
+        msg: |
+          The setup is complete! Here are the next steps:
+          1. Setup keepassxc database 
+          2. Add the ssh public key to github repo. 
+          3. Run the dev_* script to finish the setup. 

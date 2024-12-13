@@ -1,0 +1,181 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    user: suinming
+    dotfiles_repo: git@github.com:suinming/dotfiles.git
+    ssh_key: .ssh/id_ed25519
+    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
+
+  tasks:
+    - name: Setup zsh as the default shell
+      shell: command -v zsh | sudo tee -a /etc/shells
+      tags:
+        - zsh
+
+    - name: Clone Neovim repository
+      git:
+        repo: https://github.com/neovim/neovim.git
+        dest: "/home/{{ user }}/neovim"
+        version: stable
+      tags:
+        - neovim
+
+    - name: Build Neovim
+      command:
+        cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
+        chdir: "/home/{{ user }}/neovim"
+      tags:
+        - neovim
+
+    - name: Install Neovim
+      command:
+        cmd: sudo make install
+        chdir: "/home/{{ user }}/neovim"
+      tags:
+        - neovim
+
+    - name: Pull dotfiles from GitHub repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: ./dotfiles
+        accept_hostkey: yes
+        key_file: "/home/{{ user }}/{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      become: no
+      tags:
+        - dotfiles
+
+    - name: Ensure font directory exists
+      file:
+        path: /usr/local/share/fonts/nerd-fonts
+        state: directory
+        mode: '0755'
+      tags:
+        - nerd-font
+
+    - name: Download SpaceMono Nerd Font
+      get_url:
+        url: "{{ space_mono_nerd_font_link }}"
+        dest: /tmp/SpaceMono.zip
+      tags:
+        - nerd-font
+
+    - name: Unzip SpaceMono Nerd Font
+      unarchive:
+        src: /tmp/SpaceMono.zip
+        dest: /usr/local/share/fonts/nerd-fonts
+        remote_src: yes
+      tags:
+        - nerd-font
+
+    - name: Refresh font cache
+      command: fc-cache -fv
+      tags:
+        - nerd-font
+
+    - name: Configure Zsh
+      copy:
+        src: "/home/{{ user }}/dotfiles/.zshrc"
+        dest: "/home/{{ user }}/.zshrc"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - zsh
+
+    - name: Configure Neovim
+      copy:
+        src: "/home/{{ user }}/dotfiles/.config/nvim"
+        dest: "/home/{{ user }}/.config/nvim"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - neovim
+
+    - name: Install Starship
+      shell: curl -sS https://starship.rs/install.sh | sh
+      tags:
+        - starship
+
+    - name: Configure Starship
+      copy:
+        src: "/home/{{ user }}/dotfiles/.config/starship.toml"
+        dest: "/home/{{ user }}/.config/starship.toml"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - starship
+
+    - name: Clone Oh-My-Tmux repository
+      git:
+        repo: https://github.com/gpakosz/.tmux.git
+        dest: "/home/{{ user }}/oh-my-tmux"
+        update: no
+        version: master
+      become: false
+      become_user: "{{ user }}"
+      tags:
+        - tmux
+
+    - name: Ensure ~/.config/tmux directory exists
+      file:
+        path: "/home/{{ user }}/.config/tmux"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+      tags:
+        - tmux
+
+    - name: Create symlink for .tmux.conf
+      file:
+        src: "/home/{{ user }}/oh-my-tmux/.tmux.conf"
+        dest: "/home/{{ user }}/.config/tmux/tmux.conf"
+        state: link
+        owner: "{{ user }}"
+        group: "{{ user }}"
+      tags:
+        - tmux
+
+    - name: Copy .tmux.conf.local to ~/.config/tmux
+      copy:
+        src: "/home/{{ user }}/dotfiles/.tmux.conf.local"
+        dest: "/home/{{ user }}/.config/tmux/tmux.conf.local"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0644'
+      tags:
+        - tmux
+
+    - name: Setup .gitconfig
+      copy:
+        src: "/home/{{ user }}/dotfiles/.gitconfig"
+        dest: "/home/{{ user }}/.gitconfig"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Setup .gitmessage
+      copy:
+        src: "/home/{{ user }}/dotfiles/.gitmessage"
+        dest: "/home/{{ user }}/.gitmessage"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Install nvm
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      args:
+        creates: "/home/{{ user }}/.nvm/nvm.sh"
+      tags:
+        - nvm
