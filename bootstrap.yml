@@ -8,14 +8,6 @@
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
-    - name: Generate SSH key
-      user:
-        name: "{{ user }}"
-        generate_ssh_key: yes
-        ssh_key_type: ed25519
-        ssh_key_file: "{{ ssh_key }}"
-        force: no
-
     - name: Install updates (Ubuntu)
       tags: always
       apt:
