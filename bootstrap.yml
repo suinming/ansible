@@ -8,11 +8,6 @@
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
-    - name: Create user
-      user:
-        name: "{{ user }}"
-        groups: root
-
     - name: Generate SSH key
       user:
         name: "{{ user }}"
@@ -32,7 +27,6 @@
         name:
           - git
           - bat
-          - exa
           - zsh
           - tmux
           - ripgrep
@@ -48,6 +42,26 @@
           - i3blocks
         state: latest
 
+    - name: Setup .gitconfig
+      copy:
+        src: "/home/{{ user }}/dotfiles/.gitconfig"
+        dest: "/home/{{ user }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Setup .gitmessage
+      copy:
+        src: "/home/{{ user }}/dotfiles/.gitmessage"
+        dest: "/home/{{ user }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
     - name: Pull dotfiles from GitHub repository
       git:
         repo: "{{ dotfiles_repo }}"
@@ -58,10 +72,5 @@
       delegate_to: localhost
       run_once: true
       become: no
-
-    - name: Display final instructions
-      debug:
-        msg: |
-          The setup is complete! Here are the next steps:
-          1. Add the ssh public key to github repo. 
-          2. Run the dev_* script to finish the setup. 
+      tags: 
+        - git

@@ -8,6 +8,29 @@
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
+    - name: Ensure font directory exists
+      file:
+        path: /usr/local/share/fonts/nerd-fonts
+        state: directory
+        mode: '0755'
+      tags:
+        - nerd-font
+
+    - name: Download SpaceMono Nerd Font
+      get_url:
+        url: "{{ space_mono_nerd_font_link }}"
+        dest: /tmp/SpaceMono.zip
+      tags:
+        - nerd-font
+
+    - name: Unzip SpaceMono Nerd Font
+      unarchive:
+        src: /tmp/SpaceMono.zip
+        dest: /usr/local/share/fonts/nerd-fonts
+        remote_src: yes
+      tags:
+        - nerd-font
+
     - name: Clone Neovim repository
       git:
         repo: https://github.com/neovim/neovim.git
@@ -33,40 +56,12 @@
     - name: Configure Neovim
       copy:
         src: "/home/{{ user }}/dotfiles/.config/nvim"
-        dest: "/home/{{ user }}/.config/nvim"
+        dest: "/home/{{ user }}/.config"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: "0644"
       tags:
         - neovim
-
-    - name: Ensure font directory exists
-      file:
-        path: /usr/local/share/fonts/nerd-fonts
-        state: directory
-        mode: '0755'
-      tags:
-        - nerd-font
-
-    - name: Download SpaceMono Nerd Font
-      get_url:
-        url: "{{ space_mono_nerd_font_link }}"
-        dest: /tmp/SpaceMono.zip
-      tags:
-        - nerd-font
-
-    - name: Unzip SpaceMono Nerd Font
-      unarchive:
-        src: /tmp/SpaceMono.zip
-        dest: /usr/local/share/fonts/nerd-fonts
-        remote_src: yes
-      tags:
-        - nerd-font
-
-    - name: Refresh font cache
-      command: fc-cache -fv
-      tags:
-        - nerd-font
 
     - name: Setup zsh as the default shell
       shell: command -v zsh | sudo tee -a /etc/shells
@@ -83,15 +78,29 @@
       tags:
         - zsh
 
-    - name: Install Starship
-      shell: curl -sS https://starship.rs/install.sh | sh
+    - name: Get starship install script
+      ansible.builtin.get_url:
+        url: https://starship.rs/install.sh
+        dest: /tmp/starship_install.sh
+        mode: '0755'
+      register: starship_installation_script
+      when: ansible_os_family != 'Archlinux'
+      tags:
+        - starship
+     
+    - name: Install starship with installation script
+      become: true
+      ansible.builtin.shell:
+        cmd: /tmp/starship_install.sh --yes
+        executable: /bin/sh
+      when: ansible_os_family != 'Archlinux' and starship_installation_script.changed
       tags:
         - starship
 
     - name: Configure Starship
       copy:
         src: "/home/{{ user }}/dotfiles/.config/starship.toml"
-        dest: "/home/{{ user }}/.config/starship.toml"
+        dest: "/home/{{ user }}/.config"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: "0644"
@@ -177,26 +186,6 @@
         mode: 0644
       tags:
         - wezterm 
-
-    - name: Setup .gitconfig
-      copy:
-        src: "/home/{{ user }}/dotfiles/.gitconfig"
-        dest: "/home/{{ user }}/.gitconfig"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: 0644
-      tags:
-        - git
-
-    - name: Setup .gitmessage
-      copy:
-        src: "/home/{{ user }}/dotfiles/.gitmessage"
-        dest: "/home/{{ user }}/.gitmessage"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: 0644
-      tags:
-        - git
 
     - name: Install nvm
       ansible.builtin.shell: >
