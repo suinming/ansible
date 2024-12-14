@@ -193,7 +193,7 @@
 
     - name: Copy .tmux.conf.local to ~/.config/tmux
       copy:
-        src: "/home/{{ user }}/dotfiles/.tmux.conf.local"
+        src: "/home/{{ user }}/dotfiles/.config/tmux/.tmux.conf.local"
         dest: "/home/{{ user }}/.config/tmux/tmux.conf.local"
         owner: "{{ user }}"
         group: "{{ user }}"
