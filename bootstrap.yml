@@ -23,6 +23,7 @@
           - tmux
           - ripgrep
           - fzf
+          - eza
           - ninja-build
           - gettext
           - cmake
