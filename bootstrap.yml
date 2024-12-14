@@ -34,6 +34,19 @@
           - i3blocks
         state: latest
 
+    - name: Pull dotfiles from GitHub repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: /home/{{ user }}/dotfiles
+        accept_hostkey: yes
+        key_file: "/home/{{ user }}/{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      become: no
+      tags: 
+        - git
+
     - name: Setup .gitconfig
       copy:
         src: "/home/{{ user }}/dotfiles/.gitconfig"
@@ -52,17 +65,4 @@
         group: "{{ user }}"
         mode: 0644
       tags:
-        - git
-
-    - name: Pull dotfiles from GitHub repository
-      git:
-        repo: "{{ dotfiles_repo }}"
-        dest: ./dotfiles
-        accept_hostkey: yes
-        key_file: "/home/{{ user }}/{{ ssh_key }}"
-        force: yes
-      delegate_to: localhost
-      run_once: true
-      become: no
-      tags: 
         - git

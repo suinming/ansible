@@ -63,20 +63,37 @@
       tags:
         - neovim
 
-    - name: Setup zsh as the default shell
-      shell: command -v zsh | sudo tee -a /etc/shells
+    - name: Install Oh My Zsh
+      ansible.builtin.git:
+        repo: https://github.com/ohmyzsh/ohmyzsh.git
+        dest: /home/{{ user }}/.oh-my-zsh
+        depth: 1
       tags:
-        - zsh
+        - oh-my-zsh 
 
-    - name: Configure Zsh
-      copy:
-        src: "/home/{{ user }}/dotfiles/.zshrc"
-        dest: "/home/{{ user }}/.zshrc"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: "0644"
+    - name: Install zsh-autosuggestions plugin
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: /home/{{ user }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+        depth: 1
       tags:
-        - zsh
+        - oh-my-zsh 
+
+    - name: Install zsh-completions plugin # noqa: latest
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-completions
+        dest: /home/{{ user }}/.oh-my-zsh/custom/plugins/zsh-completions
+        depth: 1
+      tags:
+        - oh-my-zsh 
+
+    - name: Install zsh-syntax-highlighting plugin # noqa: latest
+      ansible.builtin.git:
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git
+        dest: /home/{{ user }}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        depth: 1
+      tags:
+        - oh-my-zsh 
 
     - name: Get starship install script
       ansible.builtin.get_url:
@@ -107,14 +124,50 @@
       tags:
         - starship
 
-    - name: Clone Oh-My-Tmux repository
+    - name: Add the Wezterm GPG key
+      ansible.builtin.shell: |
+        curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
+      args:
+        creates: /etc/apt/keyrings/wezterm-fury.gpg
+      tags:
+        - wezterm 
+
+    - name: Add the Wezterm APT repository
+      ansible.builtin.shell: |
+        echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+      args:
+        creates: /etc/apt/sources.list.d/wezterm.list
+      tags:
+        - wezterm 
+
+    - name: Update APT repositories
+      ansible.builtin.apt:
+        update_cache: yes
+      tags:
+        - wezterm 
+
+    - name: Install Wezterm
+      ansible.builtin.apt:
+        name: wezterm
+        state: present
+      tags:
+        - wezterm 
+
+    - name: Copy wezterm.lua to .config/wezterm/wezterm.lua 
+      copy:
+        src: "/home/{{ user }}/dotfiles/.config/wezterm"
+        dest: "/home/{{ user }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - wezterm 
+
+    - name: Clone oh-my-tmux repository
       git:
-        repo: https://github.com/gpakosz/.tmux.git
-        dest: "/home/{{ user }}/oh-my-tmux"
-        update: no
-        version: master
-      become: false
-      become_user: "{{ user }}"
+        repo: 'https://github.com/gpakosz/.tmux.git'
+        dest: '/home/{{ user }}/oh-my-tmux'
+        update: yes
       tags:
         - tmux
 
@@ -148,50 +201,25 @@
       tags:
         - tmux
 
-    - name: Add the Wezterm GPG key
-      ansible.builtin.shell: |
-        curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
-      args:
-        creates: /etc/apt/keyrings/wezterm-fury.gpg
-      tags:
-        - wezterm 
-
-    - name: Add the Wezterm APT repository
-      ansible.builtin.shell: |
-        echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
-      args:
-        creates: /etc/apt/sources.list.d/wezterm.list
-      tags:
-        - wezterm 
-
-    - name: Update APT repositories
-      ansible.builtin.apt:
-        update_cache: yes
-      tags:
-        - wezterm 
-
-    - name: Install Wezterm
-      ansible.builtin.apt:
-        name: wezterm
-        state: present
-      tags:
-        - wezterm 
-
-    - name: Copy wezterm.lua to .config/wezterm/wezterm.lua 
+    - name: Create .zprofile file with export PATH
       copy:
-        src: "/home/{{ user }}/dotfiles/wezterm/wezterm.lua"
-        dest: "/home/{{ user }}/.config/wezterm/wezterm.lua"
+        dest: "/home/{{ user }}/.zprofile"
+        content: |
+          export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+        mode: '0644'
         owner: "{{ user }}"
         group: "{{ user }}"
-        mode: 0644
       tags:
-        - wezterm 
+        - tmux-session
 
     - name: Install nvm
+      become: no
       ansible.builtin.shell: >
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.1/install.sh | bash
       args:
-        creates: "/home/{{ user }}/.nvm/nvm.sh"
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
       tags:
         - nvm
 
@@ -202,3 +230,11 @@
         mode: '0644'
       tags:
         - i3 
+
+    - name: Change user shell to zsh 
+      become: true
+      ansible.builtin.user:
+        name: "{{ user }}"
+        shell: /bin/zsh
+      tags:
+        - zsh 
