@@ -4,7 +4,7 @@
   vars:
     user: "suinming"
     home_dir: "/home/suinming"
-    dotfiles_repo: "git@github.com:suinming/dotfiles.git"
+    dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart.git"
     ssh_key: "/home/suinming/.ssh/id_ed25519"
 
   tasks:
