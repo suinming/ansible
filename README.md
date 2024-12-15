@@ -1,8 +1,7 @@
 # ansible
 my ansible
 
-# TODO
+# BUG 
 
-1. need to figure out how to install the zoxide using shell script
-2. create a new dotfiles-cleanup directory
-3. 
+1. can not install zoxide using ansible 
+2. tmux-session-manager install 

@@ -163,54 +163,67 @@
       tags:
         - wezterm
 
-    - name: Clone oh-my-tmux repository
-      git:
-        repo: 'https://github.com/gpakosz/.tmux.git'
-        dest: '{{ home_dir }}/oh-my-tmux'
-        update: yes
-      tags:
-        - tmux
-
-    - name: Ensure ~/.config/tmux directory exists
-      file:
-        path: "{{ home_dir }}/.config/tmux"
-        state: directory
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: '0755'
-      tags:
-        - tmux
-
-    - name: Create symlink for .tmux.conf
-      file:
-        src: "{{ home_dir }}/oh-my-tmux/.tmux.conf"
-        dest: "{{ home_dir }}/.config/tmux/tmux.conf"
-        state: link
-        owner: "{{ user }}"
-        group: "{{ user }}"
-      tags:
-        - tmux
-
-    - name: Copy .tmux.conf.local to ~/.config/tmux
-      copy:
-        src: "{{ home_dir }}/dotfiles/.config/tmux/.tmux.conf.local"
-        dest: "{{ home_dir }}/.config/tmux/tmux.conf.local"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: '0644'
-      tags:
-        - tmux
-
-    - name: Create .zprofile file with export PATH
-      copy:
-        dest: "{{ home_dir }}/.zprofile"
-        content: |
-          export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
-        mode: '0644'
-        owner: "{{ user }}"
-        group: "{{ user }}"
-      tags:
-        - tmux-session
+    # - name: Get zoxide install script
+    #   ansible.builtin.get_url:
+    #     url: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
+    #     dest: "/tmp/zoxide_install.sh"
+    #     mode: '0755'
+    #   tags:
+    #     - zoxide 
+    #
+    # - name: Install zoxide with installation script
+    #   become: true
+    #   script: "/tmp/zoxide_install.sh"
+    #   tags:
+    #     - zoxide 
+    # - name: Clone oh-my-tmux repository
+    #   git:
+    #     repo: 'https://github.com/gpakosz/.tmux.git'
+    #     dest: '{{ home_dir }}/oh-my-tmux'
+    #     update: yes
+    #   tags:
+    #     - tmux
+    #
+    # - name: Ensure ~/.config/tmux directory exists
+    #   file:
+    #     path: "{{ home_dir }}/.config/tmux"
+    #     state: directory
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #     mode: '0755'
+    #   tags:
+    #     - tmux
+    #
+    # - name: Create symlink for .tmux.conf
+    #   file:
+    #     src: "{{ home_dir }}/oh-my-tmux/.tmux.conf"
+    #     dest: "{{ home_dir }}/.config/tmux/tmux.conf"
+    #     state: link
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #   tags:
+    #     - tmux
+    #
+    # - name: Copy .tmux.conf.local to ~/.config/tmux
+    #   copy:
+    #     src: "{{ home_dir }}/dotfiles/.config/tmux/.tmux.conf.local"
+    #     dest: "{{ home_dir }}/.config/tmux/tmux.conf.local"
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #     mode: '0644'
+    #   tags:
+    #     - tmux
+    #
+    # - name: Create .zprofile file with export PATH
+    #   copy:
+    #     dest: "{{ home_dir }}/.zprofile"
+    #     content: |
+    #       export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+    #     mode: '0644'
+    #     owner: "{{ user }}"
+    #     group: "{{ user }}"
+    #   tags:
+    #     - tmux-session
 
     - name: Copy the i3 config file
       copy:
@@ -219,17 +232,3 @@
         mode: '0644'
       tags:
         - i3 
-
-    - name: Get zoxide install script
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
-        dest: "/tmp/zoxide_install.sh"
-        mode: '0755'
-      tags:
-        - zoxide 
-
-    - name: Install zoxide with installation script
-      become: true
-      script: "/tmp/zoxide_install.sh"
-      tags:
-        - zoxide 
