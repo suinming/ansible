@@ -2,10 +2,10 @@
 - hosts: localhost
   become: yes
   vars:
-    user: suinming
-    dotfiles_repo: git@github.com:suinming/dotfiles.git
-    ssh_key: .ssh/id_ed25519
-    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
+    user: "suinming"
+    home_dir: "/home/suinming"
+    dotfiles_repo: "git@github.com:suinming/dotfiles.git"
+    ssh_key: "/home/suinming/.ssh/id_ed25519"
 
   tasks:
     - name: Install updates (Ubuntu)
@@ -38,9 +38,9 @@
     - name: Pull dotfiles from GitHub repository
       git:
         repo: "{{ dotfiles_repo }}"
-        dest: /home/{{ user }}/dotfiles
+        dest: "{{ home_dir }}/dotfiles"
         accept_hostkey: yes
-        key_file: "/home/{{ user }}/{{ ssh_key }}"
+        key_file: "{{ ssh_key }}"
         force: yes
       delegate_to: localhost
       run_once: true
@@ -50,8 +50,8 @@
 
     - name: Setup .gitconfig
       copy:
-        src: "/home/{{ user }}/dotfiles/.gitconfig"
-        dest: "/home/{{ user }}"
+        src: "{{ home_dir }}/dotfiles/.gitconfig"
+        dest: "{{ home_dir }}"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: 0644
@@ -60,8 +60,8 @@
 
     - name: Setup .gitmessage
       copy:
-        src: "/home/{{ user }}/dotfiles/.gitmessage"
-        dest: "/home/{{ user }}"
+        src: "{{ home_dir }}/dotfiles/.gitmessage"
+        dest: "{{ home_dir }}"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: 0644

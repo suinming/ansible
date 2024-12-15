@@ -2,9 +2,9 @@
 - hosts: localhost
   become: yes
   vars:
-    user: suinming
-    dotfiles_repo: git@github.com:suinming/dotfiles.git
-    ssh_key: .ssh/id_ed25519
+    user: "suinming"
+    home_dir: "/home/suinming"
+    dotfiles_repo: "git@github.com:suinming/dotfiles.git"
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
 
   tasks:
@@ -34,7 +34,7 @@
     - name: Clone Neovim repository
       git:
         repo: https://github.com/neovim/neovim.git
-        dest: "/home/{{ user }}/neovim"
+        dest: "{{ user }}/neovim"
         version: stable
       tags:
         - neovim
@@ -42,21 +42,21 @@
     - name: Build Neovim
       command:
         cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
-        chdir: "/home/{{ user }}/neovim"
+        chdir: "{{ user }}/neovim"
       tags:
         - neovim
 
     - name: Install Neovim
       command:
         cmd: sudo make install
-        chdir: "/home/{{ user }}/neovim"
+        chdir: "{{ user }}/neovim"
       tags:
         - neovim
 
     - name: Configure Neovim
       copy:
-        src: "/home/{{ user }}/dotfiles/.config/nvim"
-        dest: "/home/{{ user }}/.config"
+        src: "{{ user }}/dotfiles/.config/nvim"
+        dest: "{{ user }}/.config"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: "0644"
@@ -84,8 +84,8 @@
 
     - name: Configure Starship
       copy:
-        src: "/home/{{ user }}/dotfiles/.config/starship.toml"
-        dest: "/home/{{ user }}/.config"
+        src: "{{ user }}/dotfiles/.config/starship.toml"
+        dest: "{{ user }}/.config"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: "0644"
@@ -123,8 +123,8 @@
 
     - name: Copy wezterm.lua to .config/wezterm/wezterm.lua 
       copy:
-        src: "/home/{{ user }}/dotfiles/.config/wezterm"
-        dest: "/home/{{ user }}/.config"
+        src: "{{ user }}/dotfiles/.config/wezterm"
+        dest: "{{ user }}/.config"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: 0644
@@ -134,14 +134,14 @@
     - name: Clone oh-my-tmux repository
       git:
         repo: 'https://github.com/gpakosz/.tmux.git'
-        dest: '/home/{{ user }}/oh-my-tmux'
+        dest: '{{ user }}/oh-my-tmux'
         update: yes
       tags:
         - tmux
 
     - name: Ensure ~/.config/tmux directory exists
       file:
-        path: "/home/{{ user }}/.config/tmux"
+        path: "{{ user }}/.config/tmux"
         state: directory
         owner: "{{ user }}"
         group: "{{ user }}"
@@ -151,8 +151,8 @@
 
     - name: Create symlink for .tmux.conf
       file:
-        src: "/home/{{ user }}/oh-my-tmux/.tmux.conf"
-        dest: "/home/{{ user }}/.config/tmux/tmux.conf"
+        src: "{{ user }}/oh-my-tmux/.tmux.conf"
+        dest: "{{ user }}/.config/tmux/tmux.conf"
         state: link
         owner: "{{ user }}"
         group: "{{ user }}"
@@ -161,8 +161,8 @@
 
     - name: Copy .tmux.conf.local to ~/.config/tmux
       copy:
-        src: "/home/{{ user }}/dotfiles/.config/tmux/.tmux.conf.local"
-        dest: "/home/{{ user }}/.config/tmux/tmux.conf.local"
+        src: "{{ user }}/dotfiles/.config/tmux/.tmux.conf.local"
+        dest: "{{ user }}/.config/tmux/tmux.conf.local"
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: '0644'
@@ -171,7 +171,7 @@
 
     - name: Create .zprofile file with export PATH
       copy:
-        dest: "/home/{{ user }}/.zprofile"
+        dest: "{{ user }}/.zprofile"
         content: |
           export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
         mode: '0644'
@@ -193,8 +193,8 @@
 
     - name: Copy the i3 config file
       copy:
-        src: "/home/{{ user }}/dotfiles/i3"
-        dest: "/home/{{ user }}/.config/i3"
+        src: "{{ user }}/dotfiles/i3"
+        dest: "{{ user }}/.config/i3"
         mode: '0644'
       tags:
         - i3 
