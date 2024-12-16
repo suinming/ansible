@@ -5,7 +5,10 @@
     user: "suinming"
     home_dir: "/home/suinming"
     dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart.git"
+    nvim_repo: "https://github.com/neovim/neovim.git"
     zsh_autosuggestions_repo: "git@github.com:zsh-users/zsh-autosuggestions.git"
+    zoxide_install_script_link: "https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh"
+    starship_install_script_link: "https://starship.rs/install.sh"
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
     ssh_key: "/home/suinming/.ssh/id_ed25519"
 
@@ -65,7 +68,7 @@
 
     - name: Pull Neovim from GitHub repository
       git:
-        repo: https://github.com/neovim/neovim.git
+        repo: "{{ nvim_repo }}" 
         dest: "{{ home_dir }}/neovim"
         version: stable
       tags:
@@ -73,7 +76,7 @@
 
     - name: Get zoxide install script
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
+        url: "{{ zoxide_install_script_link }}"
         dest: "/tmp/zoxide_install.sh"
         mode: '0755'
       tags:
@@ -84,6 +87,26 @@
       script: "/tmp/zoxide_install.sh"
       tags:
         - zoxide 
+
+    - name: Install nvm
+      become: no
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.1/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
+      tags:
+        - nvm
+
+    - name: Get starship install script
+      ansible.builtin.get_url:
+        url: "{{ starship_install_script_link }}" 
+        dest: /tmp/starship_install.sh
+        mode: '0755'
+      register: starship_installation_script
+      tags:
+        - starship
 
     - name: Ensure font directory exists
       file:
@@ -127,3 +150,10 @@
         mode: 0644
       tags:
         - git
+
+    - name: Display final instructions
+      debug:
+        msg: |
+          The boostrap setup is complete! Here are the next steps:
+          1. Need to make sure if zoxide is installed successfully(Type in zoxide in terminal). If not install the zoxide by executing the script in /tmp/zoxide_install.sh
+          2. Run the dev_*  script to finish the remaining setup 
