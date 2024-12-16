@@ -6,6 +6,7 @@
     home_dir: "/home/suinming"
     dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart.git"
     zsh_autosuggestions_repo: "git@github.com:zsh-users/zsh-autosuggestions.git"
+    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
     ssh_key: "/home/suinming/.ssh/id_ed25519"
 
   tasks:
