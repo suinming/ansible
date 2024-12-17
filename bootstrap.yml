@@ -85,8 +85,12 @@
     - name: Install zoxide with installation script
       become: true
       ansible.builtin.shell: "/tmp/zoxide_install.sh"
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+      args:
+        creates: /usr/local/bin/zoxide
       tags:
-        - zoxide 
+        - zoxide
 
     - name: Install nvm
       become: no
