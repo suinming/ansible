@@ -84,7 +84,7 @@
 
     - name: Install zoxide with installation script
       become: true
-      script: "/tmp/zoxide_install.sh"
+      ansible.builtin.shell: "/tmp/zoxide_install.sh"
       tags:
         - zoxide 
 
@@ -104,7 +104,24 @@
         url: "{{ starship_install_script_link }}" 
         dest: /tmp/starship_install.sh
         mode: '0755'
-      register: starship_installation_script
+      tags:
+        - starship
+
+    - name: Install starship with installation script
+      become: true
+      ansible.builtin.shell:
+        cmd: /tmp/starship_install.sh --yes
+        executable: /bin/sh
+      tags:
+        - starship
+
+    - name: Configure Starship
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/starship.toml"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
       tags:
         - starship
 

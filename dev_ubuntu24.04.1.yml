@@ -46,25 +46,6 @@
       tags:
         - neovim
 
-    - name: Install starship with installation script
-      become: true
-      ansible.builtin.shell:
-        cmd: /tmp/starship_install.sh
-        executable: /bin/sh
-      when: starship_installation_script.changed
-      tags:
-        - starship
-
-    - name: Configure Starship
-      copy:
-        src: "{{ home_dir }}/dotfiles/.config/starship.toml"
-        dest: "{{ home_dir }}/.config"
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: "0644"
-      tags:
-        - starship
-
     - name: Add the Wezterm GPG key
       ansible.builtin.shell: |
         curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
