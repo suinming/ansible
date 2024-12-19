@@ -83,12 +83,12 @@
         - zoxide 
 
     - name: Install zoxide with installation script
-      become: true
+      become: false 
       ansible.builtin.shell: "/tmp/zoxide_install.sh"
       environment:
-        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
+        PATH: "{{ ansible_env.PATH }}"
       args:
-        creates: /usr/local/bin/zoxide
+        executable: /bin/bash
       tags:
         - zoxide
 
