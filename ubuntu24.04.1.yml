@@ -25,7 +25,6 @@
           - git
           - bat
           - zsh
-          - tmux
           - ripgrep
           - fzf
           - eza
