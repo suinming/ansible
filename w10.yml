@@ -11,6 +11,8 @@
     starship_install_script_link: "https://starship.rs/install.sh"
     space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
     ssh_key: "/home/suinming/.ssh/id_ed25519"
+    ansible_user: "{{ lookup('env', 'USER') }}"
+    ansible_user_dir: "{{ lookup('env', 'HOME') }}"
 
   tasks:
     - name: Install updates (WSL Ubuntu)
@@ -209,6 +211,49 @@
         owner: "{{ user }}"
         group: "{{ user }}"
         mode: "0644"
+      tags:
+        - neovim
+
+    - name: Ensure required directories for Neovim exist
+      file:
+        path: "{{ ansible_user_dir }}/.local/{{ item }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+      loop:
+        - ""
+        - "share"
+        - "state"
+        - "cache"
+      tags:
+        - neovim
+
+    - name: Ensure Neovim config directory exists
+      file:
+        path: "{{ ansible_user_dir }}/.config/nvim"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+      tags:
+        - neovim
+
+    - name: Fix permissions recursively for Neovim directories
+      command: >
+        chmod -R 0755 {{ item }}
+      loop:
+        - "{{ ansible_user_dir }}/.local"
+        - "{{ ansible_user_dir }}/.config/nvim"
+      tags:
+        - neovim
+
+    - name: Fix ownership recursively for Neovim directories
+      command: >
+        chown -R {{ ansible_user }}:{{ ansible_user }} {{ item }}
+      loop:
+        - "{{ ansible_user_dir }}/.local"
+        - "{{ ansible_user_dir }}/.config/nvim"
       tags:
         - neovim
 
