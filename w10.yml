@@ -1,0 +1,202 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    user: "suinming"
+    home_dir: "/home/suinming"
+    dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart.git"
+    nvim_repo: "https://github.com/neovim/neovim.git"
+    zsh_autosuggestions_repo: "git@github.com:zsh-users/zsh-autosuggestions.git"
+    zoxide_install_script_link: "https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh"
+    starship_install_script_link: "https://starship.rs/install.sh"
+    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
+    ssh_key: "/home/suinming/.ssh/id_ed25519"
+
+  tasks:
+    - name: Install updates (WSL Ubuntu)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install system packages
+      apt:
+        name:
+          - git
+          - bat
+          - zsh
+          - ripgrep
+          - fzf
+          - eza
+          - ninja-build
+          - gettext
+          - cmake
+          - unzip
+          - curl
+          - python3
+          - python3-pip
+        state: latest
+
+    - name: Pull dotfiles from GitHub repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: "{{ home_dir }}/dotfiles"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - git
+
+    - name: Pull zsh-autosuggestions from GitHub repository
+      git:
+        repo: "{{ zsh_autosuggestions_repo }}"
+        dest: "{{ home_dir }}/.zsh/zsh-autosuggestions"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - git
+
+    - name: Pull Neovim from GitHub repository
+      git:
+        repo: "{{ nvim_repo }}" 
+        dest: "{{ home_dir }}/neovim"
+        version: stable
+      tags:
+        - neovim
+
+    - name: Get zoxide install script
+      get_url:
+        url: "{{ zoxide_install_script_link }}"
+        dest: "/tmp/zoxide_install.sh"
+        mode: '0755'
+      tags:
+        - zoxide
+
+    - name: Install zoxide with installation script
+      shell: "/tmp/zoxide_install.sh"
+      args:
+        executable: /bin/bash
+      tags:
+        - zoxide
+
+    - name: Install nvm
+      shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.1/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
+      tags:
+        - nvm
+
+    - name: Get starship install script
+      get_url:
+        url: "{{ starship_install_script_link }}" 
+        dest: /tmp/starship_install.sh
+        mode: '0755'
+      tags:
+        - starship
+
+    - name: Install starship with installation script
+      shell:
+        cmd: /tmp/starship_install.sh --yes
+        executable: /bin/sh
+      tags:
+        - starship
+
+    - name: Configure Starship
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/starship.toml"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - starship
+
+    - name: Ensure font directory exists (WSL-safe)
+      file:
+        path: "{{ home_dir }}/.local/share/fonts/nerd-fonts"
+        state: directory
+        mode: '0755'
+      tags:
+        - nerd-font
+
+    - name: Download SpaceMono Nerd Font
+      get_url:
+        url: "{{ space_mono_nerd_font_link }}"
+        dest: /tmp/SpaceMono.zip
+      tags:
+        - nerd-font
+
+    - name: Unzip SpaceMono Nerd Font
+      unarchive:
+        src: /tmp/SpaceMono.zip
+        dest: "{{ home_dir }}/.local/share/fonts/nerd-fonts"
+        remote_src: yes
+      tags:
+        - nerd-font
+
+    - name: Setup .gitconfig
+      copy:
+        src: "{{ home_dir }}/dotfiles/.gitconfig"
+        dest: "{{ home_dir }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Setup .gitmessage
+      copy:
+        src: "{{ home_dir }}/dotfiles/.gitmessage"
+        dest: "{{ home_dir }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Copy the zshrc config file
+      copy:
+        src: "{{ home_dir }}/dotfiles/.zshrc"
+        dest: "{{ home_dir }}"
+        mode: '0644'
+      tags:
+        - zsh
+
+    - name: Change user shell to Zsh
+      user:
+        name: "{{ user }}"
+        shell: /bin/zsh
+      tags:
+        - zsh
+
+    - name: Build Neovim
+      command:
+        cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
+        chdir: "{{ home_dir }}/neovim"
+      tags:
+        - neovim
+
+    - name: Install Neovim locally (no sudo for WSL)
+      command:
+        cmd: make install
+        chdir: "{{ home_dir }}/neovim"
+      tags:
+        - neovim
+
+    - name: Configure Neovim
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/nvim"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - neovim
