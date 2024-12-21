@@ -39,6 +39,14 @@
           - python3-pip
         state: latest
 
+    - name: Ensure .config directory exists
+      file:
+        path: "{{ home_dir }}/.config"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
+
     - name: Pull dotfiles from GitHub repository
       git:
         repo: "{{ dotfiles_repo }}"
@@ -168,16 +176,6 @@
       command:
         cmd: make install
         chdir: "{{ home_dir }}/neovim"
-      tags:
-        - neovim
-
-    - name: Ensure .config directory exists
-      file:
-        path: "{{ home_dir }}/.config"
-        state: directory
-        owner: "{{ user }}"
-        group: "{{ user }}"
-        mode: '0755'
       tags:
         - neovim
 
