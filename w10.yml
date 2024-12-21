@@ -122,29 +122,6 @@
       tags:
         - starship
 
-    - name: Ensure font directory exists (WSL-safe)
-      file:
-        path: "{{ home_dir }}/.local/share/fonts/nerd-fonts"
-        state: directory
-        mode: '0755'
-      tags:
-        - nerd-font
-
-    - name: Download SpaceMono Nerd Font
-      get_url:
-        url: "{{ space_mono_nerd_font_link }}"
-        dest: /tmp/SpaceMono.zip
-      tags:
-        - nerd-font
-
-    - name: Unzip SpaceMono Nerd Font
-      unarchive:
-        src: /tmp/SpaceMono.zip
-        dest: "{{ home_dir }}/.local/share/fonts/nerd-fonts"
-        remote_src: yes
-      tags:
-        - nerd-font
-
     - name: Setup .gitconfig
       copy:
         src: "{{ home_dir }}/dotfiles/.gitconfig"
@@ -191,6 +168,16 @@
       command:
         cmd: make install
         chdir: "{{ home_dir }}/neovim"
+      tags:
+        - neovim
+
+    - name: Ensure .config directory exists
+      file:
+        path: "{{ home_dir }}/.config"
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: '0755'
       tags:
         - neovim
 
