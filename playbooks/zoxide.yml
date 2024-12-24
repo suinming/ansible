@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  vars:
+    zoxide_install_script_link: "https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh"
+
+  tasks:
+    - name: Get zoxide install script
+      ansible.builtin.get_url:
+        url: "{{ zoxide_install_script_link }}"
+        dest: "/tmp/zoxide_install.sh"
+        mode: '0755'
+
+    - name: Install zoxide with installation script
+      become: false 
+      ansible.builtin.shell: "/tmp/zoxide_install.sh"
+      environment:
+        PATH: "{{ ansible_env.PATH }}"
+      args:
+        executable: /bin/bash

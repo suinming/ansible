@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  vars:
+    dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart-ubuntu.git"
+
+  tasks:
+    - name: Pull dotfiles from GitHub repository
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: "{{ home_dir }}/dotfiles"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true

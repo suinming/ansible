@@ -1,0 +1,33 @@
+---
+- name: Execute Playbooks
+  hosts: localhost
+  vars:
+    user: "suinming"
+    home_dir: "/home/suinming"
+    ssh_key: "/home/suinming/.ssh/id_ed25519"
+
+  tasks:
+    - name: apt update and install packages 
+      import_playbook: playbooks/apt_update_install.yml
+
+    - name: pull dotfiles 
+      import_playbook: playbooks/pull_dotfiles.yml 
+
+    - name: zoxide 
+      import_playbook: playbooks/zoxide.yml 
+
+  # import_playbook: apt_update.yml
+  # import_playbook: apt_install_packages.yml
+  # import_playbook: pull_dotfiles.yml
+  # import_playbook: zoxide.yml 
+  # import_playbook: nvm.yml 
+  # import_playbook: starship.yml 
+  # import_playbook: spacemono_nerd_font.yml 
+  # import_playbook: git_config.yml
+  # import_playbook: zsh.yml
+  # import_playbook: nvim.yml 
+  # import_playbook: wezterm.yml 
+  # import_playbook: tmux.yml 
+  # import_playbook: go.yml 
+  # import_playbook: sesh.yml 
+  # import_playbook: i3.yml 

@@ -1,0 +1,381 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    user: "suinming"
+    home_dir: "/home/suinming"
+    dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart-ubuntu.git"
+    nvim_repo: "git@github.com:neovim/neovim.git"
+    zsh_autosuggestions_repo: "git@github.com:zsh-users/zsh-autosuggestions.git"
+    tmux_repo: "git@github.com:tmux/tmux.git"
+    tpm_repo: "git@github.com:tmux-plugins/tpm.git"
+    zoxide_install_script_link: "https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh"
+    starship_install_script_link: "https://starship.rs/install.sh"
+    space_mono_nerd_font_link: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
+    go_version: "1.23.4"
+    ssh_key: "/home/suinming/.ssh/id_ed25519"
+
+  tasks:
+    - name: Install updates (Ubuntu)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install system packages
+      apt:
+        name:
+          - git
+          - bat
+          - zsh
+          - ripgrep
+          - fzf
+          - eza
+          - ninja-build
+          - gettext
+          - cmake
+          - unzip
+          - curl
+          - python3
+          - python3-pip
+          - i3
+          - i3blocks
+        state: latest
+
+    - name: Pull dotfiles from GitHub repository
+      become: no
+      git:
+        repo: "{{ dotfiles_repo }}"
+        dest: "{{ home_dir }}/dotfiles"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags: 
+        - git
+
+    - name: Pull zsh-autosuggestions from GitHub repository
+      become: no
+      git:
+        repo: "{{ zsh_autosuggestions_repo }}"
+        dest: "{{ home_dir }}/.zsh/zsh-autosuggestions"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags: 
+        - git
+
+    - name: Pull Neovim from GitHub repository
+      git:
+        repo: "{{ nvim_repo }}" 
+        dest: "{{ home_dir }}/neovim"
+        version: stable
+      tags:
+        - neovim
+
+    - name: Get zoxide install script
+      ansible.builtin.get_url:
+        url: "{{ zoxide_install_script_link }}"
+        dest: "/tmp/zoxide_install.sh"
+        mode: '0755'
+      tags:
+        - zoxide 
+
+    - name: Install zoxide with installation script
+      become: false 
+      ansible.builtin.shell: "/tmp/zoxide_install.sh"
+      environment:
+        PATH: "{{ ansible_env.PATH }}"
+      args:
+        executable: /bin/bash
+      tags:
+        - zoxide
+
+    - name: Install nvm
+      become: no
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.40.1/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
+      tags:
+        - nvm
+
+    - name: Get starship install script
+      ansible.builtin.get_url:
+        url: "{{ starship_install_script_link }}" 
+        dest: /tmp/starship_install.sh
+        mode: '0755'
+      tags:
+        - starship
+
+    - name: Install starship with installation script
+      become: true
+      ansible.builtin.shell:
+        cmd: /tmp/starship_install.sh --yes
+        executable: /bin/sh
+      tags:
+        - starship
+
+    - name: Configure Starship
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/starship.toml"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - starship
+
+    - name: Ensure font directory exists
+      file:
+        path: /usr/local/share/fonts/nerd-fonts
+        state: directory
+        mode: '0755'
+      tags:
+        - nerd-font
+
+    - name: Download SpaceMono Nerd Font
+      get_url:
+        url: "{{ space_mono_nerd_font_link }}"
+        dest: /tmp/SpaceMono.zip
+      tags:
+        - nerd-font
+
+    - name: Unzip SpaceMono Nerd Font
+      unarchive:
+        src: /tmp/SpaceMono.zip
+        dest: /usr/local/share/fonts/nerd-fonts
+        remote_src: yes
+      tags:
+        - nerd-font
+
+    - name: Setup .gitconfig
+      copy:
+        src: "{{ home_dir }}/dotfiles/.gitconfig"
+        dest: "{{ home_dir }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Setup .gitmessage
+      copy:
+        src: "{{ home_dir }}/dotfiles/.gitmessage"
+        dest: "{{ home_dir }}"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - git
+
+    - name: Copy the zshrc config file
+      copy:
+        src: "{{ home_dir }}/dotfiles/.zshrc"
+        dest: "{{ home_dir }}"
+        mode: '0644'
+      tags:
+        - zsh
+
+    - name: Change user shell to Zsh
+      become: true
+      ansible.builtin.user:
+        name: "{{ user }}"
+        shell: /bin/zsh
+      tags:
+        - zsh
+
+    - name: Build Neovim
+      command:
+        cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
+        chdir: "{{ home_dir }}/neovim"
+      tags:
+        - neovim
+
+    - name: Install Neovim
+      command:
+        cmd: sudo make install
+        chdir: "{{ home_dir }}/neovim"
+      tags:
+        - neovim
+
+    - name: Configure Neovim
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/nvim"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - neovim
+
+    - name: Add the Wezterm GPG key
+      ansible.builtin.shell: |
+        curl -fsSL https://apt.fury.io/wez/gpg.key | sudo gpg --yes --dearmor -o /etc/apt/keyrings/wezterm-fury.gpg
+      args:
+        creates: /etc/apt/keyrings/wezterm-fury.gpg
+      tags:
+        - wezterm
+
+    - name: Add the Wezterm APT repository
+      ansible.builtin.shell: |
+        echo 'deb [signed-by=/etc/apt/keyrings/wezterm-fury.gpg] https://apt.fury.io/wez/ * *' | sudo tee /etc/apt/sources.list.d/wezterm.list
+      args:
+        creates: /etc/apt/sources.list.d/wezterm.list
+      tags:
+        - wezterm
+
+    - name: Update APT repositories
+      ansible.builtin.apt:
+        update_cache: yes
+      tags:
+        - wezterm
+
+    - name: Install Wezterm
+      ansible.builtin.apt:
+        name: wezterm
+        state: present
+      tags:
+        - wezterm
+
+    - name: Copy wezterm.lua to .config/wezterm/wezterm.lua
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/wezterm"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: 0644
+      tags:
+        - wezterm
+
+    - name: Ensure dependencies for tmux are installed
+      package:
+        name: 
+          - autoconf
+          - automake
+          - libevent-dev
+          - ncurses-dev
+          - pkg-config
+          - bison
+        state: present
+
+    - name: Pull tmux from GitHub repository
+      git:
+        repo: "{{ tmux_repo }}"
+        dest: "{{ home_dir }}/tmux"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags: 
+        - tmux 
+
+    - name: Run autogen.sh
+      command: sh autogen.sh
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Configure tmux
+      command: ./configure
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Compile tmux
+      command: make
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Install tmux
+      command: make install
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Configure tmux 
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/tmux"
+        dest: "{{ home_dir }}/.config"
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        mode: "0644"
+      tags:
+        - tmux 
+
+    # - name: Pull tpm from GitHub repository
+    #   git:
+    #     repo: "{{ tpm_repo }}"
+    #     dest: "{{ home_dir }}/.tmux/plugins/tpm"
+    #     accept_hostkey: yes
+    #     key_file: "{{ ssh_key }}"
+    #     force: yes
+    #   delegate_to: localhost
+    #   run_once: true
+    #   tags: 
+    #     - tpm 
+
+    - name: Remove any existing Go installation
+      ansible.builtin.file:
+        path: /usr/local/go
+        state: absent
+
+    - name: Download Go binary
+      ansible.builtin.get_url:
+        url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        mode: '0644'
+      tags:
+        - go
+
+    - name: Extract Go binary to /usr/local
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+      tags:
+        - go
+
+    - name: Add Go to PATH for all users in /etc/profile
+      ansible.builtin.lineinfile:
+        path: /etc/profile
+        line: 'export PATH=$PATH:/usr/local/go/bin'
+        create: yes
+        mode: '0644'
+      tags:
+        - go
+
+    - name: Source /etc/profile to apply Go path changes
+      ansible.builtin.shell: source /etc/profile
+      args:
+        executable: /bin/bash
+      tags:
+        - go
+
+    - name: Install sesh using Go
+      ansible.builtin.shell: "go install github.com/joshmedeski/sesh@latest"
+      become: yes
+      environment:
+        GOPATH: "/usr/local/go"
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+      tags:
+        - sesh
+
+    - name: Copy the i3 config file
+      copy:
+        src: "{{ home_dir }}/dotfiles/.config/i3"
+        dest: "{{ home_dir }}/.config"
+        mode: '0644'
+      tags:
+        - i3 

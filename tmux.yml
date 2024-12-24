@@ -1,0 +1,127 @@
+---
+- hosts: localhost
+  become: yes
+  vars:
+    user: "suinming"
+    home_dir: "/home/suinming"
+    dotfiles_repo: "git@github.com:suinming/dotfiles-kickstart-ubuntu.git"
+    tmux_repo: "git@github.com:tmux/tmux.git"
+    tpm_repo: "git@github.com:tmux-plugins/tpm.git"
+    go_version: "1.23.4"
+    ssh_key: "/home/suinming/.ssh/id_ed25519"
+
+  tasks:
+    - name: Install updates (Ubuntu)
+      tags: always
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Ensure dependencies for tmux are installed
+      package:
+        name: 
+          - autoconf
+          - automake
+          - libevent-dev
+          - ncurses-dev
+          - pkg-config
+          - bison
+        state: present
+
+    - name: Pull tmux from GitHub repository
+      git:
+        repo: "{{ tmux_repo }}"
+        dest: "{{ home_dir }}/tmux"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags: 
+        - tmux 
+
+    - name: Run autogen.sh
+      command: sh autogen.sh
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Configure tmux
+      command: ./configure
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Compile tmux
+      command: make
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Install tmux
+      command: make install
+      args:
+        chdir: "{{ home_dir }}/tmux"
+      tags: 
+        - tmux 
+
+    - name: Pull tpm from GitHub repository
+      git:
+        repo: "{{ tpm_repo }}"
+        dest: "{{ home_dir }}/.tmux/plugins/tpm"
+        accept_hostkey: yes
+        key_file: "{{ ssh_key }}"
+        force: yes
+      delegate_to: localhost
+      run_once: true
+      tags: 
+        - tpm 
+
+    - name: Remove any existing Go installation
+      ansible.builtin.file:
+        path: /usr/local/go
+        state: absent
+
+    - name: Download Go binary
+      ansible.builtin.get_url:
+        url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        mode: '0644'
+      tags:
+        - go
+
+    - name: Extract Go binary to /usr/local
+      ansible.builtin.unarchive:
+        src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+        dest: "/usr/local"
+        remote_src: yes
+      tags:
+        - go
+
+    - name: Add Go to PATH for all users in /etc/profile
+      ansible.builtin.lineinfile:
+        path: /etc/profile
+        line: 'export PATH=$PATH:/usr/local/go/bin'
+        create: yes
+        mode: '0644'
+      tags:
+        - go
+
+    - name: Source /etc/profile to apply Go path changes
+      ansible.builtin.shell: source /etc/profile
+      args:
+        executable: /bin/bash
+      tags:
+        - go
+
+    - name: Install sesh using Go
+      ansible.builtin.shell: "go install github.com/joshmedeski/sesh@latest"
+      become: yes
+      environment:
+        GOPATH: "/usr/local/go"
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+      tags:
+        - sesh
