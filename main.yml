@@ -8,13 +8,13 @@
 
   tasks:
     - name: apt update and install packages 
-      import_playbook: playbooks/apt_update_install.yml
+      import_tasks: tasks/apt_update_install.yml
 
-    - name: pull dotfiles 
-      import_playbook: playbooks/pull_dotfiles.yml 
+    # - name: pull dotfiles 
+    #  import_tasks: tasks/pull_dotfiles.yml 
 
-    - name: zoxide 
-      import_playbook: playbooks/zoxide.yml 
+    # - name: zoxide 
+    #  import_tasks: tasks/zoxide.yml 
 
   # import_playbook: apt_update.yml
   # import_playbook: apt_install_packages.yml

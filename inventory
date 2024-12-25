@@ -1,0 +1,7 @@
+[localhost]
+localhost ansible_connection=local
+
+[localhost:vars]
+user=suinming
+home_dir=/home/suinming/
+ssh_key=/home/suinming/.ssh/id_ed25519
