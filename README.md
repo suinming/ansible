@@ -1,8 +1,12 @@
 # ansible
 
-my ansible script for different OS
+my ansible script for linux
 
-# ubuntu_24.04_LTS
+# avalible linux version
+
+- ubuntu24.04
+
+# install process 
 
 1. generate ssh key and add the key to github
 
@@ -24,8 +28,10 @@ git clone git@github.com:suinming/ansible.git
 
 4. execute the ansible playbook
 
+need to add the extra-vars argument to specific linux version
+
 ```shell
-ansible-playbook ./ansible/ubuntu24.04.1.yml --ask-become-pass
+ansible-playbook -i inventory main.yml --extra-vars "ubuntu_version=ubuntu24.04"
 ```
 
 # win10_wsl
