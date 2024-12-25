@@ -31,7 +31,7 @@ git clone git@github.com:suinming/ansible.git
 need to add the extra-vars argument to specific linux version
 
 ```shell
-ansible-playbook -i inventory main.yml --extra-vars "ubuntu_version=ubuntu24.04"
+ansible-playbook -i inventory main.yml --extra-vars "linux_version=ubuntu24.04"
 ```
 
 # win10 wsl
