@@ -14,12 +14,24 @@
     - name: Neovim
       import_tasks: tasks/nvim.yml 
 
-  # import_playbook: nvm.yml 
-  # import_playbook: starship.yml 
-  # import_playbook: spacemono_nerd_font.yml 
-  # import_playbook: git_config.yml
-  # import_playbook: zsh.yml
-  # import_playbook: wezterm.yml 
+    - name: Spacemono nerd font 
+      import_tasks: tasks/spacemono_nerd_font.yml 
+
+    - name: Nvm 
+      import_tasks: tasks/nvm.yml 
+
+    - name: Starship
+      import_tasks: tasks/starship.yml 
+
+    - name: Git config 
+      import_tasks: tasks/git.yml 
+
+    - name: Zsh
+      import_tasks: tasks/zsh.yml
+
+    - name: Wezterm
+      import_tasks: tasks/wezterm.yml
+
   # import_playbook: tmux.yml 
   # import_playbook: go.yml 
   # import_playbook: sesh.yml 

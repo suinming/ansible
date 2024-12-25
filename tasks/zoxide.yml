@@ -1,5 +1,6 @@
 ---
 - name: Get zoxide install script
+  become: true
   ansible.builtin.get_url:
     url: "{{ zoxide_install_script_link }}"
     dest: "/tmp/zoxide_install.sh"
