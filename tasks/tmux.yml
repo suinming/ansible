@@ -1,0 +1,41 @@
+---
+- name: Pull tmux from GitHub repository
+  git:
+    repo: "{{ tmux_repo }}"
+    dest: "{{ home_dir }}/tmux"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Run autogen.sh
+  command: sh autogen.sh
+  args:
+    chdir: "{{ home_dir }}/tmux"
+
+- name: Configure tmux
+  command: ./configure
+  args:
+    chdir: "{{ home_dir }}/tmux"
+
+- name: Compile tmux
+  command: make
+  args:
+    chdir: "{{ home_dir }}/tmux"
+
+- name: Install tmux
+  become: true
+  command: make install
+  args:
+    chdir: "{{ home_dir }}/tmux"
+
+# - name: Pull tpm from GitHub repository
+#   git:
+#     repo: "{{ tpm_repo }}"
+#     dest: "{{ home_dir }}/.tmux/plugins/tpm"
+#     accept_hostkey: yes
+#     key_file: "{{ ssh_key }}"
+#     force: yes
+#   delegate_to: localhost
+#   run_once: true

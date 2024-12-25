@@ -1,0 +1,6 @@
+---
+- name: Copy the i3 config file
+  copy:
+    src: "{{ home_dir }}/dotfiles/.config/i3"
+    dest: "{{ home_dir }}/.config"
+    mode: '0644'

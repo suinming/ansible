@@ -32,7 +32,14 @@
     - name: Wezterm
       import_tasks: tasks/wezterm.yml
 
-  # import_playbook: tmux.yml 
-  # import_playbook: go.yml 
-  # import_playbook: sesh.yml 
-  # import_playbook: i3.yml 
+    - name: Tmux 
+      import_tasks: tasks/tmux.yml
+
+    - name: Go 
+      import_tasks: tasks/go.yml
+
+    - name: Sesh
+      import_tasks: tasks/sesh.yml
+
+    - name: I3 window manager
+      import_tasks: tasks/i3.yml

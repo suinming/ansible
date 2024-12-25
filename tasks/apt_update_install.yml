@@ -24,4 +24,10 @@
       - python3-pip
       - i3
       - i3blocks
+      - autoconf
+      - automake
+      - libevent-dev
+      - ncurses-dev
+      - pkg-config
+      - bison
     state: latest
