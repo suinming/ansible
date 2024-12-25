@@ -3,43 +3,43 @@
   hosts: localhost
   tasks:
     - name: Apt update and install packages 
-      import_tasks: tasks/apt_update_install.yml
+      import_tasks: tasks/{{ ubuntu_version }}/apt_update_install.yml
 
     - name: Pull dotfiles 
-      import_tasks: tasks/pull_dotfiles.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/pull_dotfiles.yml 
 
     - name: Zoxide 
-      import_tasks: tasks/zoxide.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/zoxide.yml 
 
     - name: Neovim
-      import_tasks: tasks/nvim.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/nvim.yml 
 
     - name: Spacemono nerd font 
-      import_tasks: tasks/spacemono_nerd_font.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/spacemono_nerd_font.yml 
 
     - name: Nvm 
-      import_tasks: tasks/nvm.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/nvm.yml 
 
     - name: Starship
-      import_tasks: tasks/starship.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/starship.yml 
 
     - name: Git config 
-      import_tasks: tasks/git.yml 
+      import_tasks: tasks/{{ ubuntu_version }}/git.yml 
 
     - name: Zsh
-      import_tasks: tasks/zsh.yml
+      import_tasks: tasks/{{ ubuntu_version }}/zsh.yml
 
     - name: Wezterm
-      import_tasks: tasks/wezterm.yml
+      import_tasks: tasks/{{ ubuntu_version }}/wezterm.yml
 
     - name: Tmux 
-      import_tasks: tasks/tmux.yml
+      import_tasks: tasks/{{ ubuntu_version }}/tmux.yml
 
     - name: Go 
-      import_tasks: tasks/go.yml
+      import_tasks: tasks/{{ ubuntu_version }}/go.yml
 
     - name: Sesh
-      import_tasks: tasks/sesh.yml
+      import_tasks: tasks/{{ ubuntu_version }}/sesh.yml
 
     - name: I3 window manager
-      import_tasks: tasks/i3.yml
+      import_tasks: tasks/{{ ubuntu_version }}/i3.yml
