@@ -1,0 +1,24 @@
+---
+- name: Pull Neovim from GitHub repository
+  git:
+    repo: "{{ nvim_repo }}" 
+    dest: "{{ home_dir }}/neovim"
+    version: stable
+
+- name: Build Neovim
+  command:
+    cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
+    chdir: "{{ home_dir }}/neovim"
+
+- name: Install Neovim
+  command:
+    cmd: sudo make install
+    chdir: "{{ home_dir }}/neovim"
+
+- name: Configure Neovim
+  copy:
+    src: "{{ home_dir }}/dotfiles/.config/nvim"
+    dest: "{{ home_dir }}/.config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
