@@ -1,11 +1,6 @@
 ---
 - name: Execute Playbooks
   hosts: localhost
-  vars:
-    user: "suinming"
-    home_dir: "/home/suinming"
-    ssh_key: "/home/suinming/.ssh/id_ed25519"
-
   tasks:
     - name: apt update and install packages 
       import_tasks: tasks/apt_update_install.yml
