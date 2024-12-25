@@ -2,11 +2,11 @@
 
 my ansible script for linux
 
-# avalible linux version
+# linux
 
 - ubuntu24.04
 
-# install process 
+## install process 
 
 1. generate ssh key and add the key to github
 
@@ -34,7 +34,9 @@ need to add the extra-vars argument to specific linux version
 ansible-playbook -i inventory main.yml --extra-vars "ubuntu_version=ubuntu24.04"
 ```
 
-# win10_wsl
+# win10 wsl
+
+## install process
 
 1. install keepassxc from the browser
 
