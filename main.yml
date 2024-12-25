@@ -3,43 +3,43 @@
   hosts: localhost
   tasks:
     - name: Apt update and install packages 
-      import_tasks: tasks/{{ ubuntu_version }}/apt_update_install.yml
+      import_tasks: tasks/{{ linux_version }}/apt_update_install.yml
 
     - name: Pull dotfiles 
-      import_tasks: tasks/{{ ubuntu_version }}/pull_dotfiles.yml 
+      import_tasks: tasks/{{ linux_version }}/pull_dotfiles.yml 
 
     - name: Zoxide 
-      import_tasks: tasks/{{ ubuntu_version }}/zoxide.yml 
+      import_tasks: tasks/{{ linux_version }}/zoxide.yml 
 
     - name: Neovim
-      import_tasks: tasks/{{ ubuntu_version }}/nvim.yml 
+      import_tasks: tasks/{{ linux_version }}/nvim.yml 
 
     - name: Spacemono nerd font 
-      import_tasks: tasks/{{ ubuntu_version }}/spacemono_nerd_font.yml 
+      import_tasks: tasks/{{ linux_version }}/spacemono_nerd_font.yml 
 
     - name: Nvm 
-      import_tasks: tasks/{{ ubuntu_version }}/nvm.yml 
+      import_tasks: tasks/{{ linux_version }}/nvm.yml 
 
     - name: Starship
-      import_tasks: tasks/{{ ubuntu_version }}/starship.yml 
+      import_tasks: tasks/{{ linux_version }}/starship.yml 
 
     - name: Git config 
-      import_tasks: tasks/{{ ubuntu_version }}/git.yml 
+      import_tasks: tasks/{{ linux_version }}/git.yml 
 
     - name: Zsh
-      import_tasks: tasks/{{ ubuntu_version }}/zsh.yml
+      import_tasks: tasks/{{ linux_version }}/zsh.yml
 
     - name: Wezterm
-      import_tasks: tasks/{{ ubuntu_version }}/wezterm.yml
+      import_tasks: tasks/{{ linux_version }}/wezterm.yml
 
     - name: Tmux 
-      import_tasks: tasks/{{ ubuntu_version }}/tmux.yml
+      import_tasks: tasks/{{ linux_version }}/tmux.yml
 
     - name: Go 
-      import_tasks: tasks/{{ ubuntu_version }}/go.yml
+      import_tasks: tasks/{{ linux_version }}/go.yml
 
     - name: Sesh
-      import_tasks: tasks/{{ ubuntu_version }}/sesh.yml
+      import_tasks: tasks/{{ linux_version }}/sesh.yml
 
     - name: I3 window manager
-      import_tasks: tasks/{{ ubuntu_version }}/i3.yml
+      import_tasks: tasks/{{ linux_version }}/i3.yml
