@@ -8,7 +8,7 @@ home_dir=/home/suinming/
 
 ssh_key=/home/suinming/.ssh/id_ed25519
 
-dotfiles_repo=git@github.com:suinming/dotfiles-kickstart-ubuntu.git
+dotfiles_repo=git@github.com:suinming/dotfiles-kickstart-linux.git
 
 zoxide_install_script_link=https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
 
