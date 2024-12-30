@@ -20,8 +20,6 @@ tmux_repo=git@github.com:tmux/tmux.git
 
 tpm_repo=git@github.com:tmux-plugins/tpm.git
 
-zoxide_install_script_link=https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh
-
 starship_install_script_link=https://starship.rs/install.sh
 
 space_mono_nerd_font_link=https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/SpaceMono.zip
