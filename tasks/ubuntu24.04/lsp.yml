@@ -15,9 +15,12 @@
     chdir: "{{ home_dir }}/lua-language-server"
 
 - name: Install volar LSP for Vue 3 (use npm)
-  npm:
-    name: "@vue/language-server"
-    global: yes
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g @vue/language-server
+  args:
+    executable: /bin/bash
 
 - name: Install vuels LSP for Vue 2
   shell: |
