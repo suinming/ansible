@@ -1,0 +1,6 @@
+---
+- name: Testing Tasks
+  hosts: localhost
+  tasks:
+    - name: Install neovim
+      import_tasks: tasks/ubuntu24.04/nvim.yml

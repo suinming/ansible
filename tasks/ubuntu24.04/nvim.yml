@@ -1,18 +1,26 @@
 ---
 - name: Pull Neovim from GitHub repository
   git:
-    repo: "{{ nvim_repo }}" 
+    repo: "{{ nvim_repo }}"
     dest: "{{ home_dir }}/neovim"
     version: stable
 
-- name: Build Neovim
+- name: Clear CMake cache
+  become: true
   command:
-    cmd: make CMAKE_BUILD_TYPE=RelWithDebInfo
+    cmd: rm -r build/
+    chdir: "{{ home_dir }}/neovim"
+
+- name: Make
+  become: true
+  command:
+    cmd: make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
     chdir: "{{ home_dir }}/neovim"
 
 - name: Install Neovim
+  become: true
   command:
-    cmd: sudo make install
+    cmd: make install
     chdir: "{{ home_dir }}/neovim"
 
 - name: Configure Neovim
