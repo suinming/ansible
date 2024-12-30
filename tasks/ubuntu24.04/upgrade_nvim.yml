@@ -12,7 +12,6 @@
   register: build_dir_status
 
 - name: Uninstall existing Neovim
-  become: true
   command:
     cmd: cmake --build build/ --target uninstall
     chdir: "{{ home_dir }}/neovim"

@@ -2,16 +2,8 @@
 - name: Testing Neovim install
   hosts: localhost
   tasks:
-    # install neovim
-     - name: Pull dotfiles
-       import_tasks: tasks/ubuntu24.04/pull_dotfiles.yml
-    
      - name: Install neovim
        import_tasks: tasks/ubuntu24.04/nvim.yml
-    
-     - name: Zsh
-       import_tasks: tasks/ubuntu24.04/zsh.yml
 
-    # uninstall neovim
-    # - name: Install neovim
-    #  import_tasks: tasks/ubuntu24.04/uninstall_nvim.yml
+     - name: Upgrade neovim
+       import_tasks: tasks/ubuntu24.04/upgrade_nvim.yml
