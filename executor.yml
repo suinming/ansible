@@ -2,12 +2,6 @@
 - name: Execute some tasks
   hosts: localhost
   tasks:
-    - name: Apt update and install packages
-      import_tasks: tasks/ubuntu24.04/apt_update_install.yml
-
-    - name: Nvm
-      import_tasks: tasks/ubuntu24.04/nvm.yml
-
     - name: Lsp
       import_tasks: tasks/ubuntu24.04/lsp.yml
 

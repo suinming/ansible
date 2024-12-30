@@ -34,3 +34,6 @@
 
     - name: Sesh
       import_tasks: tasks/win10wsl/sesh.yml
+
+    - name: Lsp
+      import_tasks: tasks/ubuntu24.04/lsp.yml
