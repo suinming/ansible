@@ -1,0 +1,35 @@
+---
+- name: Update Neovim repository
+  git:
+    repo: "{{ nvim_repo }}"
+    dest: "{{ home_dir }}/neovim"
+    version: stable
+    force: yes
+
+- name: Check if the build directory exists
+  stat:
+    path: "{{ home_dir }}/neovim/build"
+  register: build_dir_status
+
+- name: Uninstall existing Neovim
+  command:
+    cmd: cmake --build build/ --target uninstall
+    chdir: "{{ home_dir }}/neovim"
+  when: build_dir_status.stat.exists
+
+- name: Clear CMake cache
+  command:
+    cmd: rm -r build/
+    chdir: "{{ home_dir }}/neovim"
+  args:
+    removes: "{{ home_dir }}/neovim/build"
+
+- name: Make the updated Neovim
+  command:
+    cmd: make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+    chdir: "{{ home_dir }}/neovim"
+
+- name: Install the updated Neovim
+  command:
+    cmd: make install
+    chdir: "{{ home_dir }}/neovim"

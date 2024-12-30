@@ -1,0 +1,7 @@
+---
+- name: Install sesh using Go
+  become: yes
+  ansible.builtin.shell: "go install github.com/joshmedeski/sesh@latest"
+  environment:
+    GOPATH: "/usr/local/go"
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"

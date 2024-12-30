@@ -1,0 +1,36 @@
+---
+- name: Execute Tasks on win10wsl
+  hosts: localhost
+  tasks:
+    - name: Apt update and install packages
+      import_tasks: tasks/win10wsl/apt_update_install.yml
+
+    - name: Pull dotfiles
+      import_tasks: tasks/win10wsl/pull_dotfiles.yml
+
+    - name: Zoxide
+      import_tasks: tasks/win10wsl/zoxide.yml
+
+    - name: Neovim
+      import_tasks: tasks/win10wsl/nvim.yml
+
+    - name: Nvm
+      import_tasks: tasks/win10wsl/nvm.yml
+
+    - name: Starship
+      import_tasks: tasks/win10wsl/starship.yml
+
+    - name: Git config
+      import_tasks: tasks/win10wsl/git.yml
+
+    - name: Zsh
+      import_tasks: tasks/win10wsl/zsh.yml
+
+    - name: Tmux
+      import_tasks: tasks/win10wsl/tmux.yml
+
+    - name: Go
+      import_tasks: tasks/win10wsl/go.yml
+
+    - name: Sesh
+      import_tasks: tasks/win10wsl/sesh.yml

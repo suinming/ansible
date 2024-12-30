@@ -1,0 +1,6 @@
+---
+- name: Uninstall neovim by CMake target
+  become: true
+  command:
+    cmd: cmake --build build/ --target uninstall
+    chdir: "{{ home_dir }}/neovim"

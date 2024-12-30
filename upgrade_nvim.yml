@@ -1,6 +1,0 @@
----
-- name: Upgrade neovim to stable version
-  hosts: localhost
-  tasks:
-     - name: Upgrade neovim
-       import_tasks: tasks/ubuntu24.04/upgrade_nvim.yml
