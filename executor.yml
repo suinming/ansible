@@ -2,8 +2,8 @@
 - name: Execute some tasks
   hosts: localhost
   tasks:
-    - name: Lsp
-      import_tasks: tasks/ubuntu24.04/lsp.yml
+    - name: Linters
+      import_tasks: tasks/ubuntu24.04/linter.yml
 
      # - name: Upgrade neovim
      #   import_tasks: tasks/ubuntu24.04/upgrade_nvim.yml

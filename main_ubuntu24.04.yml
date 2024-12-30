@@ -44,5 +44,8 @@
     - name: Lsp
       import_tasks: tasks/ubuntu24.04/lsp.yml
 
+    - name: Linter
+      import_tasks: tasks/ubuntu24.04/linter.yml
+
     - name: I3 window manager
       import_tasks: tasks/ubuntu24.04/i3.yml
