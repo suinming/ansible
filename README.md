@@ -1,6 +1,6 @@
 # ansible
 
-my ansible script for linux
+my ansible scripts for different OS
 
 # linux
 
