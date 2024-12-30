@@ -10,6 +10,8 @@
   command:
     cmd: rm -r build/
     chdir: "{{ home_dir }}/neovim"
+  args:
+    removes: "{{ home_dir }}/neovim/build"
 
 - name: Make
   become: true
