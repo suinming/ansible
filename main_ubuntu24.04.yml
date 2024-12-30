@@ -1,30 +1,30 @@
 ---
-- name: Execute Tasks 
+- name: Execute Tasks
   hosts: localhost
   tasks:
-    - name: Apt update and install packages 
+    - name: Apt update and install packages
       import_tasks: tasks/ubuntu24.04/apt_update_install.yml
 
-    - name: Pull dotfiles 
-      import_tasks: tasks/ubuntu24.04/pull_dotfiles.yml 
+    - name: Pull dotfiles
+      import_tasks: tasks/ubuntu24.04/pull_dotfiles.yml
 
-    - name: Zoxide 
-      import_tasks: tasks/ubuntu24.04/zoxide.yml 
+    - name: Zoxide
+      import_tasks: tasks/ubuntu24.04/zoxide.yml
 
     - name: Neovim
-      import_tasks: tasks/ubuntu24.04/nvim.yml 
+      import_tasks: tasks/ubuntu24.04/nvim.yml
 
-    - name: Spacemono nerd font 
-      import_tasks: tasks/ubuntu24.04/spacemono_nerd_font.yml 
+    - name: Spacemono nerd font
+      import_tasks: tasks/ubuntu24.04/spacemono_nerd_font.yml
 
-    - name: Nvm 
-      import_tasks: tasks/ubuntu24.04/nvm.yml 
+    - name: Nvm
+      import_tasks: tasks/ubuntu24.04/nvm.yml
 
     - name: Starship
-      import_tasks: tasks/ubuntu24.04/starship.yml 
+      import_tasks: tasks/ubuntu24.04/starship.yml
 
-    - name: Git config 
-      import_tasks: tasks/ubuntu24.04/git.yml 
+    - name: Git config
+      import_tasks: tasks/ubuntu24.04/git.yml
 
     - name: Zsh
       import_tasks: tasks/ubuntu24.04/zsh.yml
@@ -32,14 +32,17 @@
     - name: Wezterm
       import_tasks: tasks/ubuntu24.04/wezterm.yml
 
-    - name: Tmux 
+    - name: Tmux
       import_tasks: tasks/ubuntu24.04/tmux.yml
 
-    - name: Go 
+    - name: Go
       import_tasks: tasks/ubuntu24.04/go.yml
 
     - name: Sesh
       import_tasks: tasks/ubuntu24.04/sesh.yml
+
+    - name: Lsp
+      import_tasks: tasks/ubuntu24.04/lsp.yml
 
     - name: I3 window manager
       import_tasks: tasks/ubuntu24.04/i3.yml

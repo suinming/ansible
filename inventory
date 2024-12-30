@@ -27,3 +27,5 @@ space_mono_nerd_font_link=https://github.com/ryanoasis/nerd-fonts/releases/downl
 go_version=1.23.4
 
 wezterm_config=/home/suinming/dotfiles/.config/wezterm
+
+luals_repo=git@github.com:LuaLS/lua-language-server.git

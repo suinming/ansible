@@ -6,7 +6,7 @@ my ansible scripts for different OS
 
 - ubuntu24.04
 
-## install process 
+## install process
 
 1. generate ssh key and add the key to github
 
@@ -31,7 +31,7 @@ git clone git@github.com:suinming/ansible.git
 need to add the extra-vars argument to specific linux version
 
 ```shell
-ansible-playbook -i inventory main.yml --extra-vars "linux_version=ubuntu24.04"
+ansible-playbook -i inventory main_ubuntu24.04.yml --ask-become-pass
 ```
 
 # win10 wsl
@@ -71,7 +71,7 @@ git clone git@github.com:suinming/ansible.git
 - in window terminal settings>settings.json and change the profiles section in the json
 
 ```json
-    "profiles": 
+    "profiles":
     {
         "defaults": {
           "font": {

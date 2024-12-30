@@ -30,4 +30,5 @@
       - ncurses-dev
       - pkg-config
       - bison
+      - libsdc++6
     state: latest
