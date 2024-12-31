@@ -19,7 +19,7 @@
   delegate_to: localhost
   run_once: true
 
-- name: Pull cht from GitHub repository
+- name: Pull myscripts from GitHub repository
   git:
     repo: "{{ myscripts_repo }}"
     dest: "{{ home_dir }}/myscripts"
