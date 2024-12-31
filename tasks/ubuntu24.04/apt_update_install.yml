@@ -24,13 +24,14 @@
       - python3-pip
       - i3
       - i3blocks
+      - rofi
       - autoconf
       - automake
       - libevent-dev
       - ncurses-dev
       - pkg-config
       - bison
-      - g++ 
+      - g++
       - fcitx5
       - fcitx5-chewing
       - fcitx5-table-extra
