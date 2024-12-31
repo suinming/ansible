@@ -1,0 +1,22 @@
+---
+- name: Pull rofi repo
+  git:
+    repo: "{{ rofi_repo }}"
+    dest: "{{ home_dir }}/rofi"
+    depth: 1
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Make setup.sh executable
+  file:
+    path: "{{ home_dir }}/rofi/setup.sh"
+    mode: u+x
+    state: file
+
+- name: Run setup.sh
+  command: ./setup.sh
+  args:
+    chdir: "{{ home_dir }}/rofi"
