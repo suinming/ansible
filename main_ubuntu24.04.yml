@@ -8,6 +8,9 @@
     - name: Pull dotfiles
       import_tasks: tasks/ubuntu24.04/pull_dotfiles.yml
 
+    - name: Pull digitalMind, cht
+      import_tasks: tasks/ubuntu24.04/pull_repos.yml
+
     - name: Zoxide
       import_tasks: tasks/ubuntu24.04/zoxide.yml
 

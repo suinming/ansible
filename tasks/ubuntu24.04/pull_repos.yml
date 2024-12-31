@@ -1,0 +1,30 @@
+---
+- name: Pull digitalMind from GitHub repository
+  git:
+    repo: "{{ digitalMind_repo }}"
+    dest: "{{ home_dir }}/digitalMind"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Pull cht from GitHub repository
+  git:
+    repo: "{{ cht_repo }}"
+    dest: "{{ home_dir }}/cht"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Pull cht from GitHub repository
+  git:
+    repo: "{{ myscripts_repo }}"
+    dest: "{{ home_dir }}/myscripts"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true

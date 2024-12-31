@@ -31,3 +31,9 @@ wezterm_config=/home/suinming/dotfiles/.config/wezterm
 luals_repo=git@github.com:LuaLS/lua-language-server.git
 
 rofi_repo=git@github.com:adi1090x/rofi.git
+
+digitalMind_repo=git@github.com:suinming/digitalMind.git
+
+cht_repo=git@github.com:suinming/cht.git
+
+myscripts_repo=git@github.com:suinming/myscripts.git
