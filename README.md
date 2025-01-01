@@ -34,6 +34,10 @@ need to add the extra-vars argument to specific linux version
 ansible-playbook -i inventory main_ubuntu24.04.yml --ask-become-pass
 ```
 
+> [!WARNING]  
+> ubuntu24.04的firefox使用snap下載，會有無法輸入中文的問題 
+> 使用官方的作法，從 APT 倉庫安裝 .deb 套件包[doc_link](https://support.mozilla.org/zh-TW/kb/install-firefox-linux?utm_source=www.mozilla.org&utm_medium=referral&utm_campaign=firefox-download-thanks&_gl=1*9q6f4w*_ga*MjczMTI3MTg2LjE3MzU3MTgxNzg.*_ga_MQ7767QQQW*MTczNTcxODE4NC4xLjEuMTczNTcxODE5My4wLjAuMA..#w_install-firefox-deb-package-for-debian-based-distributions)
+
 # win10 wsl
 
 ## install process
