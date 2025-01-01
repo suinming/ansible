@@ -2,7 +2,7 @@
 - name: Pull digitalMind from GitHub repository
   git:
     repo: "{{ digitalMind_repo }}"
-    dest: "{{ home_dir }}/digitalMind"
+    dest: "{{ home_dir }}/repo/digitalMind"
     accept_hostkey: yes
     key_file: "{{ ssh_key }}"
     force: yes
@@ -12,7 +12,7 @@
 - name: Pull cht from GitHub repository
   git:
     repo: "{{ cht_repo }}"
-    dest: "{{ home_dir }}/cht"
+    dest: "{{ home_dir }}/repo/cht"
     accept_hostkey: yes
     key_file: "{{ ssh_key }}"
     force: yes
