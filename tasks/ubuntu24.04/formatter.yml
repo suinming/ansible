@@ -6,3 +6,9 @@
     npm install -g prettier @fsouza/prettierd cspell@latest
   args:
     executable: /bin/bash
+
+- name: Install stylua (use cargo)
+  shell: |
+    cargo install stylua
+  args:
+    executable: /bin/bash

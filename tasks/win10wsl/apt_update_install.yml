@@ -31,4 +31,5 @@
       - pkg-config
       - bison
       - libsdc++6
+      - xclip
     state: latest
