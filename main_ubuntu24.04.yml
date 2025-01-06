@@ -41,6 +41,9 @@
     - name: Go
       import_tasks: tasks/ubuntu24.04/go.yml
 
+    - name: Rust
+      import_tasks: tasks/ubuntu24.04/rust.yml
+
     - name: Sesh
       import_tasks: tasks/ubuntu24.04/sesh.yml
 
