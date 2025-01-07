@@ -18,3 +18,17 @@
   snap:
     name: vale
     state: present
+
+- name: Configure vale
+  copy:
+    src: "{{ home_dir }}/dotfiles/.config/vale"
+    dest: "{{ home_dir }}/.config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+
+- name: Sync vale
+  shell: |
+    vale sync
+  args:
+    executable: /bin/bash
