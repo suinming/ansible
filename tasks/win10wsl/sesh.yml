@@ -5,3 +5,11 @@
   environment:
     GOPATH: "/usr/local/go"
     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+
+- name: Configure sesh
+  copy:
+    src: "{{ home_dir }}/dotfiles/.config/sesh"
+    dest: "{{ home_dir }}/.config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
