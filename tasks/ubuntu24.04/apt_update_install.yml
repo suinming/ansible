@@ -37,4 +37,6 @@
       - fcitx5-table-extra
       - trash-cli
       - pavucontrol
+      - virt-manager
+      - virtiofsd # so that virt-manager can share directory between host and guess
     state: latest
