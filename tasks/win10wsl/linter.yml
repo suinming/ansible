@@ -1,0 +1,20 @@
+---
+- name: Install eslint, eslint_d ,stylelint (use npm)
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g eslint eslint_d stylelint
+  args:
+    executable: /bin/bash
+
+- name: Install ruff
+  shell: |
+    curl -LsSf https://astral.sh/ruff/0.8.4/install.sh | sh
+  args:
+    executable: /bin/bash
+
+- name: Install vale (use snap)
+  become: true
+  snap:
+    name: vale
+    state: present

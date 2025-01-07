@@ -7,3 +7,11 @@
     executable: /bin/bash
     chdir: "$HOME"
     creates: "$HOME/.nvm/nvm.sh"
+
+- name: Load NVM, install Node.js v22.12.0 LTS, and set it as default
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm install lts/jod
+    nvm alias default 22
+  args:
+    executable: /bin/bash

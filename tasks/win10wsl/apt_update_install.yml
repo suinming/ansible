@@ -1,5 +1,5 @@
 ---
-- name: Install updates (Ubuntu)
+- name: Install updates (WSL)
   become: true
   apt:
     upgrade: dist
@@ -22,14 +22,12 @@
       - curl
       - python3
       - python3-pip
-      - i3
-      - i3blocks
       - autoconf
       - automake
       - libevent-dev
       - ncurses-dev
       - pkg-config
       - bison
-      - libsdc++6
-      - xclip
+      - g++
+      - trash-cli
     state: latest

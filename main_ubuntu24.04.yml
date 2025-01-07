@@ -1,5 +1,5 @@
 ---
-- name: Execute Tasks
+- name: Execute Tasks In Ubuntu24.04
   hosts: localhost
   tasks:
     - name: Apt update and install packages

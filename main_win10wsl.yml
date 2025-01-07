@@ -1,5 +1,5 @@
 ---
-- name: Execute Tasks on win10wsl
+- name: Execute Tasks In Win10 WSL
   hosts: localhost
   tasks:
     - name: Apt update and install packages
@@ -7,6 +7,9 @@
 
     - name: Pull dotfiles
       import_tasks: tasks/win10wsl/pull_dotfiles.yml
+
+    - name: Pull digitalMind, cht, myscripts
+      import_tasks: tasks/win10wsl/pull_repos.yml
 
     - name: Zoxide
       import_tasks: tasks/win10wsl/zoxide.yml
@@ -32,8 +35,17 @@
     - name: Go
       import_tasks: tasks/win10wsl/go.yml
 
+    - name: Rust
+      import_tasks: tasks/win10wsl/rust.yml
+
     - name: Sesh
       import_tasks: tasks/win10wsl/sesh.yml
 
     - name: Lsp
-      import_tasks: tasks/ubuntu24.04/lsp.yml
+      import_tasks: tasks/win10wsl/lsp.yml
+
+    - name: Linter
+      import_tasks: tasks/win10wsl/linter.yml
+
+    - name: Formatter
+      import_tasks: tasks/win10wsl/formatter.yml
