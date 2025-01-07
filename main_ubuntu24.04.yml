@@ -44,6 +44,9 @@
     - name: Rust
       import_tasks: tasks/ubuntu24.04/rust.yml
 
+    - name: pyenv
+      import_tasks: tasks/win10wsl/pyenv.yml
+
     - name: Sesh
       import_tasks: tasks/ubuntu24.04/sesh.yml
 

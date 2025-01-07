@@ -5,8 +5,5 @@
     - name: task
       import_tasks: tasks/win10wsl/pyenv.yml
 
-    - name: task
-      import_tasks: tasks/win10wsl/formatter.yml
-
      # - name: Upgrade neovim
      #   import_tasks: tasks/ubuntu24.04/upgrade_nvim.yml

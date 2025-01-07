@@ -38,6 +38,9 @@
     - name: Rust
       import_tasks: tasks/win10wsl/rust.yml
 
+    - name: pyenv
+      import_tasks: tasks/win10wsl/pyenv.yml
+
     - name: Sesh
       import_tasks: tasks/win10wsl/sesh.yml
 
