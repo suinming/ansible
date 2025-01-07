@@ -9,6 +9,6 @@
 
 - name: Install stylua (use cargo)
   shell: |
-    cargo install stylua
+    $HOME/.cargo/bin/cargo install stylua
   args:
     executable: /bin/bash

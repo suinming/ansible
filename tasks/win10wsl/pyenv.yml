@@ -1,0 +1,7 @@
+---
+- name: Install pyenv
+  become: no
+  ansible.builtin.shell: >
+    curl -fsSL https://pyenv.run | bash
+  args:
+    executable: /bin/bash
