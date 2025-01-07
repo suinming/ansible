@@ -39,4 +39,5 @@
       - pavucontrol
       - virt-manager
       - virtiofsd # so that virt-manager can share directory between host and guess
+      - xclip
     state: latest

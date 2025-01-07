@@ -30,4 +30,5 @@
       - bison
       - g++
       - trash-cli
+      - xclip
     state: latest
