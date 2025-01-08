@@ -87,3 +87,5 @@ ansible-playbook ./ansible/w10.yml --ask-become-pass
 ```
 
 9. [set the colorscheme of window-terminal to rose-pine](https://github.com/rose-pine/windows-terminal)
+
+10. [`Komorebi window manager`](https://lgug2z.github.io/komorebi/installation.html)
