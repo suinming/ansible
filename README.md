@@ -70,21 +70,9 @@ git clone git@github.com:suinming/ansible.git
 
 6. setup `SpaceMono Nerd Font` in window
 
-- download [SpaceMono Nerd Font](https://www.nerdfonts.com/font-downloads)
+- download [`SpaceMono Nerd Font`](https://www.nerdfonts.com/font-downloads)
 - go to download directory select all the SpaceMono Nerd Font and right click to install
-- ubuntu > 其他設定 > 外觀 > 字體(選擇 SpaceMonoe)
-- in window terminal settings>settings.json and change the profiles section in the json
-
-```json
-    "profiles":
-    {
-        "defaults": {
-          "font": {
-            "face": "SpaceMono Nerd Font"
-          }
-        },
-    }
-```
+- Ubuntu > 其他設定 > 外觀 > 字體(選擇 `SpaceMono`)
 
 7. install ansible
 
@@ -97,3 +85,5 @@ sudo apt install ansible
 ```shell
 ansible-playbook ./ansible/w10.yml --ask-become-pass
 ```
+
+9. [set the colorscheme of window-terminal to rose-pine](https://github.com/rose-pine/windows-terminal)
