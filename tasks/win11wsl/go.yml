@@ -1,0 +1,34 @@
+---
+- name: Remove any existing Go installation
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/go
+    state: absent
+
+- name: Download Go binary
+  become: true
+  ansible.builtin.get_url:
+    url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+    mode: '0644'
+
+- name: Extract Go binary to /usr/local
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/go{{ go_version }}.linux-amd64.tar.gz"
+    dest: "/usr/local"
+    remote_src: yes
+
+- name: Add Go to PATH for all users in /etc/profile
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/profile
+    line: 'export PATH=$PATH:/usr/local/go/bin'
+    create: yes
+    mode: '0644'
+
+- name: Source /etc/profile to apply Go path changes
+  become: true
+  ansible.builtin.shell: source /etc/profile
+  args:
+    executable: /bin/bash

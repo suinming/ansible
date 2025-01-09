@@ -1,0 +1,54 @@
+---
+- name: Execute Tasks In Win11 WSL
+  hosts: localhost
+  tasks:
+    - name: Apt update and install packages
+      import_tasks: tasks/win11wsl/apt_update_install.yml
+
+    - name: Pull dotfiles
+      import_tasks: tasks/win11wsl/pull_dotfiles.yml
+
+    - name: Pull digitalMind, cht, myscripts
+      import_tasks: tasks/win11wsl/pull_repos.yml
+
+    - name: Zoxide
+      import_tasks: tasks/win11wsl/zoxide.yml
+
+    - name: Neovim
+      import_tasks: tasks/win11wsl/nvim.yml
+
+    - name: Nvm
+      import_tasks: tasks/win11wsl/nvm.yml
+
+    - name: Starship
+      import_tasks: tasks/win11wsl/starship.yml
+
+    - name: Git config
+      import_tasks: tasks/win11wsl/git.yml
+
+    - name: Zsh
+      import_tasks: tasks/win11wsl/zsh.yml
+
+    - name: Tmux
+      import_tasks: tasks/win11wsl/tmux.yml
+
+    - name: Go
+      import_tasks: tasks/win11wsl/go.yml
+
+    - name: Rust
+      import_tasks: tasks/win11wsl/rust.yml
+
+    - name: pyenv
+      import_tasks: tasks/win11wsl/pyenv.yml
+
+    - name: Sesh
+      import_tasks: tasks/win11wsl/sesh.yml
+
+    - name: Lsp
+      import_tasks: tasks/win11wsl/lsp.yml
+
+    - name: Linter
+      import_tasks: tasks/win11wsl/linter.yml
+
+    - name: Formatter
+      import_tasks: tasks/win11wsl/formatter.yml

@@ -1,0 +1,53 @@
+---
+- name: Pull lua-language-server
+  git:
+    repo: "{{ luals_repo }}"
+    dest: "{{ home_dir }}/lua-language-server"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true
+
+- name: Install lua-language-server
+  command:
+    cmd: ./make.sh
+    chdir: "{{ home_dir }}/lua-language-server"
+
+- name: Install volar LSP for Vue 3 (use npm)
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g @vue/language-server
+  args:
+    executable: /bin/bash
+
+- name: Install vuels LSP for Vue 2
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g vls 
+  args:
+    executable: /bin/bash
+
+- name: Install TypeScript-related tools (use npm)
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g typescript typescript-language-server @vue/typescript-plugin
+  args:
+    executable: /bin/bash
+
+- name: Install Emmet Language Server (use npm)
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g @olrtg/emmet-language-server
+  args:
+    executable: /bin/bash
+
+- name: Install LSP Marksman (use snap)
+  become: true
+  snap:
+    name: marksman
+    state: present

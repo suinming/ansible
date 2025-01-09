@@ -1,0 +1,23 @@
+---
+- name: Copy the zshrc config file
+  copy:
+    src: "{{ home_dir }}/dotfiles/.zshrc"
+    dest: "{{ home_dir }}"
+    mode: '0644'
+
+- name: Change user shell to Zsh
+  become: true
+  ansible.builtin.user:
+    name: "{{ user }}"
+    shell: /bin/zsh
+
+- name: Pull zsh-autosuggestions from GitHub repository
+  become: no
+  git:
+    repo: "{{ zsh_autosuggestions_repo }}"
+    dest: "{{ home_dir }}/.zsh/zsh-autosuggestions"
+    accept_hostkey: yes
+    key_file: "{{ ssh_key }}"
+    force: yes
+  delegate_to: localhost
+  run_once: true

@@ -1,0 +1,14 @@
+---
+- name: Install prettier, prettired, cspell (use npm)
+  shell: |
+    . $HOME/.nvm/nvm.sh
+    nvm use default
+    npm install -g prettier @fsouza/prettierd cspell@latest
+  args:
+    executable: /bin/bash
+
+- name: Install stylua (use cargo)
+  shell: |
+    $HOME/.cargo/bin/cargo install stylua
+  args:
+    executable: /bin/bash

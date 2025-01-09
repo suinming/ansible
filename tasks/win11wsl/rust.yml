@@ -1,0 +1,8 @@
+---
+- name: Install Rust
+  become: no
+  ansible.builtin.shell: >
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+  args:
+    executable: /bin/bash
+
